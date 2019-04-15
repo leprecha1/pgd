@@ -5,7 +5,7 @@ from tfw_was import worker_class
 from tfw_was import worker_class_helper
 
 setup(
-    name='ghdb',
+    name='pgd',
     version='1.0',
     description='Web Application - Google Dorks Crawler',
     long_description="Retrieve information by crawling Google Dorks.",
