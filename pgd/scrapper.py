@@ -2,6 +2,7 @@ import logging
 import os
 import selenium
 import datetime
+import json
 from random import randint
 from time import sleep
 from selenium import webdriver
@@ -77,7 +78,8 @@ class GHDBScrapper():
         print('Initializing httpretriever object')
         self._driver = HttpRetriever()
         self._driver.run()
-
+        self.file_write = 'googledorks.txt'
+        self.dorkslist = []
 
     def _get_table_content(self, source_page):
         soup = BeautifulSoup(source_page, "html.parser")
@@ -90,7 +92,7 @@ class GHDBScrapper():
             category = (dork_content[2].text).strip()
 
             if category in DORK_CATEGORIES_PERMIT:
-                print(date, dork, category)
+                self.dorkslist.append({'dork':dork, 'date':date, 'category':category})
             dateobj = datetime.datetime.strptime(date, '%Y-%m-%d')
 
         return dateobj
@@ -103,6 +105,9 @@ class GHDBScrapper():
             dateobj = self._get_table_content(source)
             if dateobj < BASEDATE: break
             self._driver.click_next_page('exploits-table_next')
+
+        with open(self.file_write, 'w') as _file_:
+            _file_.write(json.dumps(self.dorkslist))
 
     def close(self):
         self._driver.stop()
